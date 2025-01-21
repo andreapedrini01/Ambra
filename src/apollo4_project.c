@@ -52,6 +52,7 @@
 #include "am_mcu_apollo.h"
 #include "am_bsp.h"
 #include "am_util.h"
+#include "../libalpaca/alpaca.h"
 
 //*****************************************************************************
 //
@@ -79,43 +80,14 @@
 #define N 4
 #define WORD 4
 
-#define _nv __align(16) __attribute__((section("_nv")))
-
-#define WRITE_MRAM(array_ptr, start_address, size)                                			\
-    do                                                                         	 				\
-    {                                                                           				\
-        if (((uint32_t)(start_address) % 16) != 0)                              				\
-        {                                                                       				\
-            am_util_stdio_printf("The starting address is not alligned to 16 byte.\n"); \
-        }                                                                       				\
-        else                                                                    				\
-        {                                                                       				\
-            returnCode = am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,  				    \
-                                                      (array_ptr),                  		\
-                                                      (start_address),          				\
-                                                      (size));                  				\
-            am_util_stdio_printf("MRAM program returnCode = %d\n", returnCode); 				\
-        }                                                                       				\
-    } while (0)
-
 //global variables
 int returnCode = 0;
 static uint32_t mram_data[N];
 _nv uint32_t x = 0;
 _nv uint32_t x_cpy = 256;
 
-//*****************************************************************************
-//
-// Main
-//
-//*****************************************************************************
-int
-main(void)
-{
-		uint32_t *x_addr = &x;
-		uint32_t *x_cpy_addr = &x_cpy;
-	
-    //
+void init() {
+	//
     // Set the default cache configuration
     //
     am_hal_cachectrl_config(&am_hal_cachectrl_defaults);
@@ -136,6 +108,20 @@ main(void)
     }
 		
 		am_util_stdio_terminal_clear();
+}
+
+//*****************************************************************************
+//
+// Main
+//
+//*****************************************************************************
+int
+main(void)
+{
+		uint32_t *x_addr = &x;
+		uint32_t *x_cpy_addr = &x_cpy;
+	
+    init();
 		
 		mram_data[0] = x_cpy;
 		uint32_t *ptr = mram_data;

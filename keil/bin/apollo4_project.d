@@ -82,3 +82,5 @@
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_string.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_time.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_ble_cooper.h
+.\bin\apollo4_project.o: ..\src\../libalpaca/alpaca.h
+.\bin\apollo4_project.o: ../src/../libapollo/mem.h

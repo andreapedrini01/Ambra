@@ -341,7 +341,7 @@
               <MiscControls>--reduce_paths</MiscControls>
               <Define>AM_PACKAGE_BGA AM_PART_APOLLO4L keil</Define>
               <Undefine></Undefine>
-              <IncludePath>../../../../../../mcu/apollo4l;../../../../../../CMSIS/AmbiqMicro/Include;../src;../../../../../../devices;../../../../../../CMSIS/ARM/Include;../../../../bsp;../../../../../../utils;../../../../../..</IncludePath>
+              <IncludePath>../../../../../../mcu/apollo4l;../../../../../../CMSIS/AmbiqMicro/Include;../src;../../../../../../devices;../../../../../../CMSIS/ARM/Include;../../../../bsp;../../../../../../utils;../../../../../..;..\libapollo;..\libalpaca</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -375,7 +375,7 @@
             <ScatterFile>.\linker_script.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>../../../../../../mcu/apollo4l/hal/mcu/keil/bin/libam_hal.lib </Misc>
+            <Misc>../../../../../../mcu/apollo4l/hal/mcu/keil/bin/libam_hal.lib</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -447,14 +447,108 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>libalpaca</GroupName>
+          <Files>
+            <File>
+              <FileName>alpaca.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\libalpaca\alpaca.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>libapollo</GroupName>
+          <Files>
+            <File>
+              <FileName>mem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\libapollo\mem.h</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>
 
   <RTE>
+    <packages>
+      <filter>
+        <targetInfos/>
+      </filter>
+      <package name="CMSIS-Compiler" vendor="ARM" version="2.1.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-DSP" vendor="ARM" version="1.16.2">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-Driver" vendor="ARM" version="2.9.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-NN" vendor="ARM" version="6.0.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-RTX" vendor="ARM" version="5.9.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-View" vendor="ARM" version="1.2.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS" vendor="ARM" version="6.1.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="Cortex_DFP" vendor="ARM" version="1.1.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="Apollo_DFP" vendor="AmbiqMicro" version="1.4.1">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="ARM_Compiler" vendor="Keil" version="1.7.2">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="MDK-Middleware" vendor="Keil" version="8.0.0">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-embOS" vendor="SEGGER" version="1.1.1">
+        <targetInfos>
+          <targetInfo name="apollo4_project" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+    </packages>
     <apis/>
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>apollo4_project</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
