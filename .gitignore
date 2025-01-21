@@ -2,8 +2,7 @@
 Project.uvguix.*
 
 # Output generato
-/Listings/
-/Objects/
+/keil/Listings/
 
 # Useless directories
 /keil6/
