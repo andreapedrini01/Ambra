@@ -1,0 +1,14 @@
+# Local configuration file
+Project.uvguix.*
+
+# Output generato
+/Listings/
+/Objects/
+
+# Useless directories
+/keil6/
+/iar/
+
+# File temporanei o di sistema
+*.tmp
+*.log
