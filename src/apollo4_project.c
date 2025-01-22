@@ -51,7 +51,6 @@
 
 #include "am_mcu_apollo.h"
 #include "am_bsp.h"
-#include "am_util.h"
 #include "../libalpaca/alpaca.h"
 
 //*****************************************************************************
@@ -77,14 +76,12 @@
 #define ENABLE_DEBUGGER
 
 //constants
-#define N 4
-#define WORD 4
+#define N 1
 
 //global variables
 int returnCode = 0;
-static uint32_t mram_data[N];
-_nv uint32_t x = 0;
-_nv uint32_t x_cpy = 256;
+__nv uint32_t x = 0;
+__nv uint32_t x_cpy = 256;
 
 void init() {
 	//
@@ -110,6 +107,8 @@ void init() {
 		am_util_stdio_terminal_clear();
 }
 
+INIT_FUNC(init);
+
 //*****************************************************************************
 //
 // Main
@@ -119,17 +118,12 @@ int
 main(void)
 {
 		uint32_t *x_addr = &x;
-		uint32_t *x_cpy_addr = &x_cpy;
 	
-    init();
-		
-		mram_data[0] = x_cpy;
-		uint32_t *ptr = mram_data;
+    _init();
 
-		WRITE_MRAM(ptr, x_addr, WORD);
+		COPY_VALUE(x, x_cpy);
 		
 		am_util_stdio_printf("x = 0x%08x = 0x%08x\n", x, *x_addr);
-
     am_util_stdio_printf("x_addr = 0x%08x\n\n", x_addr);
 		
 		//
