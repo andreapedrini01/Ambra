@@ -455,6 +455,11 @@
               <FileType>5</FileType>
               <FilePath>..\libalpaca\alpaca.h</FilePath>
             </File>
+            <File>
+              <FileName>alpaca.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\libalpaca\alpaca.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

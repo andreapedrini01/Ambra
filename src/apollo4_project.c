@@ -83,7 +83,7 @@ int returnCode = 0;
 __nv uint32_t x = 0;
 __nv uint32_t x_cpy = 256;
 
-void init() {
+void init_hw() {
 	//
     // Set the default cache configuration
     //
@@ -107,7 +107,26 @@ void init() {
 		am_util_stdio_terminal_clear();
 }
 
-INIT_FUNC(init);
+
+
+void my_task();
+void another_task();
+
+TASK(0, my_task);
+TASK(1, another_task);
+
+void my_task() {
+	// Logica della tua attività
+	am_util_stdio_printf("I am in my_task\n");
+  TRANSITION_TO(another_task);
+}
+
+void another_task() {
+	am_util_stdio_printf("I am in another_task\n");
+}
+
+ENTRY_TASK(my_task);
+INIT_FUNC(init_hw);
 
 //*****************************************************************************
 //
@@ -117,14 +136,8 @@ INIT_FUNC(init);
 int
 main(void)
 {
-		uint32_t *x_addr = &x;
-	
     _init();
 
-		COPY_VALUE(x, x_cpy);
-		
-		am_util_stdio_printf("x = 0x%08x = 0x%08x\n", x, *x_addr);
-    am_util_stdio_printf("x_addr = 0x%08x\n\n", x_addr);
 		
 		//
     // We are done printing.

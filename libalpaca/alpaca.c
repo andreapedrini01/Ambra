@@ -2,10 +2,9 @@
 #include <string.h>
 #include <am_bsp.h>
 #include <am_util.h>
-#include <am_hal.h>
 #include <stdio.h>
-#include <constants.h>
-#include <libalpaca/alpaca.h>
+#include <../constants.h>
+#include <alpaca.h>
 
 __nv uint16_t scratch_bak[SCRATCH_SIZE];
 
@@ -159,7 +158,7 @@ void write_to_gbuf(uint8_t *data_src, uint8_t *data_dest, size_t var_size)
 int main()
 {
 //    setvbuf(stdout, NULL, _IONBF, 0);
-    _BIS_SR(GIE);
+    __enable_irq();				//modified for apollo4 blue lite
     init();
 
     // check for update
