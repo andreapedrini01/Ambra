@@ -73,6 +73,8 @@
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_button.h
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_display_generic.h
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_display_types.h
+.\bin\apollo4_project.o: ..\src\../libalpaca/alpaca.h
+.\bin\apollo4_project.o: ../src/../libapollo/mem.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_debug.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_delay.h
@@ -82,5 +84,3 @@
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_string.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_time.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_ble_cooper.h
-.\bin\apollo4_project.o: ..\src\../libalpaca/alpaca.h
-.\bin\apollo4_project.o: ../src/../libapollo/mem.h

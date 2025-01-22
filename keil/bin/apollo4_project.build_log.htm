@@ -26,11 +26,11 @@ Project File Date:  01/21/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\Bin'
-Build target 'apollo4_project'
+Rebuild target 'apollo4_project'
+compiling am_util_stdio.c...
 compiling startup_keil.s...
+compiling am_util_string.c...
 compiling apollo4_project.c...
-../src/../libapollo/mem.h(25): warning:  #1-D: last line of file ends without a newline
-  #endif // _LIBAPOLLO_MEM_H
 ..\src\../libalpaca/alpaca.h(49): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
   extern void clear_isDirty();
 ..\src\../libalpaca/alpaca.h(55): warning:  #1295-D: Deprecated declaration init - give arg types
@@ -39,20 +39,17 @@ compiling apollo4_project.c...
   void task_prologue();
 ..\src\../libalpaca/alpaca.h(118): warning:  #1295-D: Deprecated declaration _init - give arg types
   void _init();
-..\src\apollo4_project.c(122): warning:  #177-D: variable "x_cpy_addr"  was declared but never referenced
-  		uint32_t *x_cpy_addr = &x_cpy;
-..\src\apollo4_project.c: 6 warnings, 0 errors
+..\src\apollo4_project.c: 4 warnings, 0 errors
+compiling am_resources.c...
+compiling am_util_id.c...
+compiling am_util_delay.c...
 linking...
 .\linker_script.sct(18): warning: L6314W: No section matches pattern *.o(.ramfunc).
-Program Size: Code=11316 RO-data=720 RW-data=208 ZI-data=8016  
+Program Size: Code=11320 RO-data=720 RW-data=212 ZI-data=8000  
 Finished: 0 information, 1 warning and 0 error messages.
-After Build - User command #1: fromelf --bin --output bin\hello_world.bin bin\hello_world.axf
-"bin\hello_world.axf": Error: Q0122E: Could not open file 'bin\hello_world.axf': No such file or directory
-Finished: 0 information, 0 warning and 1 error messages.
-After Build - User command #2: fromelf -cedrst --output bin\hello_world.txt bin\hello_world.axf
-"bin\hello_world.axf": Error: Q0122E: Could not open file 'bin\hello_world.axf': No such file or directory
-Finished: 0 information, 0 warning and 1 error messages.
-".\bin\apollo4_project.axf" - 0 Error(s), 7 Warning(s).
+After Build - User command #1: fromelf --bin --output bin\apollo4_project.bin bin\apollo4_project.axf
+After Build - User command #2: fromelf -cedrst --output bin\apollo4_project.txt bin\apollo4_project.axf
+".\bin\apollo4_project.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -65,7 +62,7 @@ Package Vendor: AmbiqMicro
   C:/Users/andre/AppData/Local/Arm/Packs/AmbiqMicro/Apollo_DFP/1.4.1/Device/Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:10
 </pre>
 </body>
 </html>
