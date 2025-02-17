@@ -8,6 +8,7 @@
 ".\bin\startup_keil.o"
 "..\..\..\..\..\..\mcu\apollo4l\hal\mcu\keil\bin\libam_hal.lib"
 "..\..\..\..\bsp\keil\bin\libam_bsp.lib"
+".\bin\alpaca.o"
 --strict --scatter ".\linker_script.sct"
 ../../../../../../mcu/apollo4l/hal/mcu/keil/bin/libam_hal.lib --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

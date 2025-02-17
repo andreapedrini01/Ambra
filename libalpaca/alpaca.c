@@ -6,20 +6,26 @@
 #include <../constants.h>
 #include <alpaca.h>
 
-__nv uint16_t scratch_bak[SCRATCH_SIZE];
+uint8_t* data_dest[] = {NULL};
+unsigned data_size[] = {0};
+uint8_t* data_src[] = {NULL};
+
+void clear_isDirty() {
+    // Implementazione
+}
 
 /**
  * @brief dirtylist to save src address
  */
-__nv uint8_t **data_src_base = &data_src;
+__nv uint8_t **data_src_base = data_src;
 /**
  * @brief dirtylist to save dst address
  */
-__nv uint8_t **data_dest_base = &data_dest;
+__nv uint8_t **data_dest_base = data_dest;
 /**
  * @brief dirtylist to save size
  */
-__nv unsigned *data_size_base = &data_size;
+__nv unsigned *data_size_base = data_size;
 
 /**
  * @brief var to iterate over dirtylist
@@ -103,12 +109,12 @@ void transition_to(task_t *next_task)
     // fire task prologue
     task_prologue();
     // jump to next tast
-    __asm__ volatile ( // volatile because output operands unused by C
-            "mov #0x2400, r1\n"
-            "br %[ntask]\n"
-            :
-            : [ntask] "r" (next_task->func)
-    );
+//    __asm__ volatile ( // volatile because output operands unused by C
+//            "mov #0x2400, r1\n"
+//            "br %[ntask]\n"
+//            :
+//            : [ntask] "r" (next_task->func)
+//    );
 }
 
 /**
@@ -155,21 +161,21 @@ void write_to_gbuf(uint8_t *data_src, uint8_t *data_dest, size_t var_size)
 //}
 
 /** @brief Entry point upon reboot */
-int main()
-{
-//    setvbuf(stdout, NULL, _IONBF, 0);
-    __enable_irq();				//modified for apollo4 blue lite
-    init();
+//int main()
+//{
+////    setvbuf(stdout, NULL, _IONBF, 0);
+//    __enable_irq();				//modified for apollo4 blue lite
+//    init();
 
-    // check for update
-    task_prologue();
+//    // check for update
+//    task_prologue();
 
-    // jump to curctx
-    __asm__ volatile ( // volatile because output operands unused by C
-            "br %[nt]\n"
-            : /* no outputs */
-            : [nt] "r" (curctx->task->func)
-    );
-    return 0;
-}
+//    // jump to curctx
+////    __asm__ volatile ( // volatile because output operands unused by C
+////            "br %[nt]\n"
+////            : /* no outputs */
+////            : [nt] "r" (curctx->task->func)
+////    );
+//    return 0;
+//}
 

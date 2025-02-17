@@ -73,8 +73,9 @@
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_button.h
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_display_generic.h
 .\bin\apollo4_project.o: ../../../../../../devices/am_devices_display_types.h
+.\bin\apollo4_project.o: C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\Bin\..\include\string.h
 .\bin\apollo4_project.o: ..\src\../libalpaca/alpaca.h
-.\bin\apollo4_project.o: ../src/../libapollo/mem.h
+.\bin\apollo4_project.o: ..\src\../libalpaca/../libapollo/mem.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_debug.h
 .\bin\apollo4_project.o: ../../../../../../utils/am_util_delay.h

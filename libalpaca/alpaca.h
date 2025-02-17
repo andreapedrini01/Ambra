@@ -3,16 +3,12 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <../libapollo/mem.h>
+#include "../libapollo/mem.h"
 
 typedef void (task_func_t)(void);
 typedef unsigned task_idx_t;
 
-#define SCRATCH_SIZE 0x10
-
 #define CUR_TASK (curctx->task)
-#define CUR_INFO (curctx->task->info)
-#define CUR_SCRATCH (curctx->task->info.scratch)
 
 /** @brief Task */
 typedef struct task_t {
@@ -21,10 +17,6 @@ typedef struct task_t {
 	/** @brief index (only used for showing progress) */
 	task_idx_t idx;
 	/** @brief helpful for keeping track of state and return task */
-	struct {
-		unsigned int scratch[SCRATCH_SIZE];
-		struct task_t *return_task;
-	} info;
 } task_t;
 
 /** @brief Execution context */
@@ -35,7 +27,6 @@ typedef struct _context_t {
 	uint8_t needCommit;
 } context_t;
 
-extern uint16_t scratch_bak[SCRATCH_SIZE];
 extern uint8_t* data_src[];
 extern uint8_t* data_dest[];
 extern unsigned data_size[];

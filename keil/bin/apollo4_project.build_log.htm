@@ -27,49 +27,45 @@ Project File Date:  01/22/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\Bin'
 Rebuild target 'apollo4_project'
-compiling am_util_string.c...
 compiling startup_keil.s...
+compiling am_util_string.c...
 compiling am_util_stdio.c...
-compiling am_util_delay.c...
-compiling am_resources.c...
 compiling am_util_id.c...
-compiling alpaca.c...
-..\libalpaca\alpaca.h(49): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
-  extern void clear_isDirty();
-..\libalpaca\alpaca.h(55): warning:  #1295-D: Deprecated declaration init - give arg types
-  extern void init();
-..\libalpaca\alpaca.h(57): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
-  void task_prologue();
-..\libalpaca\alpaca.h(118): warning:  #1295-D: Deprecated declaration _init - give arg types
-  void _init();
-..\libalpaca\alpaca.c(14): error:  #144: a value of type "uint8_t *(*)[]" cannot be used to initialize an entity of type "uint8_t **"
-  __nv uint8_t **data_src_base = &data_src;
-..\libalpaca\alpaca.c(18): error:  #144: a value of type "uint8_t *(*)[]" cannot be used to initialize an entity of type "uint8_t **"
-  __nv uint8_t **data_dest_base = &data_dest;
-..\libalpaca\alpaca.c(22): error:  #144: a value of type "unsigned int (*)[]" cannot be used to initialize an entity of type "unsigned int *"
-  __nv unsigned *data_size_base = &data_size;
-..\libalpaca\alpaca.c(109): error:  #18: expected a ")"
-              :
-..\libalpaca\alpaca.c(170): error:  #18: expected a ")"
-              : /* no outputs */
-..\libalpaca\alpaca.c: 4 warnings, 5 errors
+compiling am_resources.c...
+compiling am_util_delay.c...
 compiling apollo4_project.c...
-..\src\../libalpaca/alpaca.h(49): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
+..\src\../libalpaca/alpaca.h(40): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
   extern void clear_isDirty();
-..\src\../libalpaca/alpaca.h(55): warning:  #1295-D: Deprecated declaration init - give arg types
+..\src\../libalpaca/alpaca.h(46): warning:  #1295-D: Deprecated declaration init - give arg types
   extern void init();
-..\src\../libalpaca/alpaca.h(57): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
+..\src\../libalpaca/alpaca.h(48): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
   void task_prologue();
-..\src\../libalpaca/alpaca.h(118): warning:  #1295-D: Deprecated declaration _init - give arg types
+..\src\../libalpaca/alpaca.h(109): warning:  #1295-D: Deprecated declaration _init - give arg types
   void _init();
-..\src\apollo4_project.c(112): warning:  #1295-D: Deprecated declaration my_task - give arg types
+..\src\apollo4_project.c(120): warning:  #1295-D: Deprecated declaration my_task - give arg types
   void my_task();
-..\src\apollo4_project.c(113): warning:  #1295-D: Deprecated declaration another_task - give arg types
+..\src\apollo4_project.c(121): warning:  #1295-D: Deprecated declaration another_task - give arg types
   void another_task();
-..\src\apollo4_project.c(128): warning:  #1295-D: Deprecated declaration _entry_task - give arg types
+..\src\apollo4_project.c(137): warning:  #1295-D: Deprecated declaration _entry_task - give arg types
   ENTRY_TASK(my_task);
 ..\src\apollo4_project.c: 7 warnings, 0 errors
-".\bin\apollo4_project.axf" - 5 Error(s), 11 Warning(s).
+compiling alpaca.c...
+..\libalpaca\alpaca.h(40): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
+  extern void clear_isDirty();
+..\libalpaca\alpaca.h(46): warning:  #1295-D: Deprecated declaration init - give arg types
+  extern void init();
+..\libalpaca\alpaca.h(48): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
+  void task_prologue();
+..\libalpaca\alpaca.h(109): warning:  #1295-D: Deprecated declaration _init - give arg types
+  void _init();
+..\libalpaca\alpaca.c: 4 warnings, 0 errors
+linking...
+.\linker_script.sct(18): warning: L6314W: No section matches pattern *.o(.ramfunc).
+Program Size: Code=12348 RO-data=720 RW-data=456 ZI-data=8000  
+Finished: 0 information, 1 warning and 0 error messages.
+After Build - User command #1: fromelf --bin --output bin\apollo4_project.bin bin\apollo4_project.axf
+After Build - User command #2: fromelf -cedrst --output bin\apollo4_project.txt bin\apollo4_project.axf
+".\bin\apollo4_project.axf" - 0 Error(s), 12 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -82,7 +78,6 @@ Package Vendor: AmbiqMicro
   C:/Users/andre/AppData/Local/Arm/Packs/AmbiqMicro/Apollo_DFP/1.4.1/Device/Include
 
 <h2>Collection of Component Files used:</h2>
-Target not created.
 Build Time Elapsed:  00:00:11
 </pre>
 </body>

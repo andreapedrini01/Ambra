@@ -1,56 +1,6 @@
-//*****************************************************************************
-//
-//! @file hello_world.c
-//!
-//! @brief A simple "Hello World" example.
-//!
-//! This example prints a "Hello World" message with some device info
-//! over SWO at 1M baud. To see the output of this program, use J-Link
-//! SWO Viewer (or similar viewer appl) and configure SWOClock for 1000.
-//! The example sleeps after it is done printing.
-//
-//*****************************************************************************
-
-//*****************************************************************************
-//
-// Copyright (c) 2023, Ambiq Micro, Inc.
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// 1. Redistributions of source code must retain the above copyright notice,
-// this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the copyright holder nor the names of its
-// contributors may be used to endorse or promote products derived from this
-// software without specific prior written permission.
-//
-// Third party software included in this distribution is subject to the
-// additional license terms as defined in the /docs/licenses directory.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
-//
-// This is part of revision release_sdk_4_4_1-7498c7b770 of the AmbiqSuite Development Package.
-//
-//*****************************************************************************
-
 #include "am_mcu_apollo.h"
 #include "am_bsp.h"
+#include <string.h>
 #include "../libalpaca/alpaca.h"
 
 //*****************************************************************************
@@ -75,16 +25,56 @@
 
 #define ENABLE_DEBUGGER
 
-//constants
-#define N 1
+//use this to modify your work variable
+//to be sure to not modify variable in wrong buffer
+#define GVB(type, ...) GV_(type, ##__VA_ARGS__, 2, 1)
+#define GVB_(type, i, n, ...) GV##n(type, i)
+#define GVB1(type, ...) _global_ ## manager.buffer[1-manager.index].type
+#define GVB2(type, i) _global_ ## manager.buffer[1-manager.index].type[i]
+
+const uint32_t INIT_SIGNATURE = 0xA90110;
+
+typedef struct
+{
+		//all power failure resiliant variables listed here
+		uint32_t x;
+		uint32_t y;
+} CritVar;
+
+typedef struct
+{
+		//Signature to know if variables have to be initialized
+		uint32_t signature;
+		//Journaling index
+		uint32_t needCommit;
+		//Main index
+		uint32_t index;
+		//Double buffer
+		CritVar buffer[2];
+	
+} StateManager;
 
 //global variables
-int returnCode = 0;
-__nv uint32_t x = 0;
-__nv uint32_t x_cpy = 256;
+GLOBAL_SB2(StateManager, manager);
+GLOBAL_SB2(uint32_t, var); //ignore for presentation
+
+void init_state_manager() {
+	if(GV(manager.signature) != INIT_SIGNATURE) {
+    COPY_VALUE(GV(manager.needCommit), 0);
+    COPY_VALUE(GV(manager.index), 0);
+		//Buffers init
+		for(int i=0; i<2; i++) {
+			COPY_VALUE(GV(manager.buffer, i).x, 0);
+			COPY_VALUE(GV(manager.buffer, i).y, 0);
+		}
+		
+		//init done, set signature
+		COPY_VALUE(GV(manager.signature), INIT_SIGNATURE);
+	}
+}
 
 void init_hw() {
-	//
+		//
     // Set the default cache configuration
     //
     am_hal_cachectrl_config(&am_hal_cachectrl_defaults);
@@ -105,18 +95,37 @@ void init_hw() {
     }
 		
 		am_util_stdio_terminal_clear();
+		
+		__enable_irq();
+		init_state_manager();
 }
 
 
+//switch the index to change the buffer with original values
+//
+void commit_state() {
+	COPY_VALUE(GV(manager.needCommit), 1-GV(manager.needCommit));
+	COPY_VALUE(GV(manager.index), GV(manager.needCommit));
+}
 
+//rollback to the original values
+void rollback_state() {
+	int i = GV(manager.index);
+	memcpy(&GV(manager.buffer, 1-i),
+		&GV(manager.buffer, i),
+		sizeof(CritVar));
+}
+
+//tasks
 void my_task();
 void another_task();
 
-TASK(0, my_task);
-TASK(1, another_task);
+TASK(1, my_task);
+TASK(2, another_task);
 
 void my_task() {
-	// Logica della tua attività
+	COPY_VALUE(GV(var), 5);
+	am_util_stdio_printf("var = %#x\n", GV(var));
 	am_util_stdio_printf("I am in my_task\n");
   TRANSITION_TO(another_task);
 }
@@ -137,8 +146,7 @@ int
 main(void)
 {
     _init();
-
-		
+	
 		//
     // We are done printing.
     // Disable debug printf messages on ITM.
