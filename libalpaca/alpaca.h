@@ -120,8 +120,8 @@ void _init();
  */
 #define GLOBAL_SB(type, name, ...) GLOBAL_SB_(type, name, ##__VA_ARGS__, 3, 2)
 #define GLOBAL_SB_(type, name, size, n, ...) GLOBAL_SB##n(type, name, size)
-#define GLOBAL_SB2(type, name, ...) __nv type _global_ ## name
-#define GLOBAL_SB3(type, name, size) __nv type _global_ ## name[size]
+#define GLOBAL_SB2(type, name, ...) __nv type name
+#define GLOBAL_SB3(type, name, size) __nv type name[size]
 
 /**
  *  @brief way to simply reference renamed vars. I don't need it actually.
@@ -130,8 +130,8 @@ void _init();
  */
 #define GV(type, ...) GV_(type, ##__VA_ARGS__, 2, 1)
 #define GV_(type, i, n, ...) GV##n(type, i)
-#define GV1(type, ...) _global_ ## type
-#define GV2(type, i) _global_ ## type[i]
+#define GV1(type, ...) type
+#define GV2(type, i) type[i]
 
 /** @brief Transfer control to the given task
  *  @param task     Name of the task function
