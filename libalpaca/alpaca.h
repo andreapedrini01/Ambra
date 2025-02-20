@@ -130,8 +130,8 @@ void _init();
  */
 #define GV(type, ...) GV_(type, ##__VA_ARGS__, 2, 1)
 #define GV_(type, i, n, ...) GV##n(type, i)
-#define GV1(type, ...) type
-#define GV2(type, i) type[i]
+#define GV1(type, ...) manager.type.value
+#define GV2(type, i) manager.type[i].value
 
 /** @brief Transfer control to the given task
  *  @param task     Name of the task function
