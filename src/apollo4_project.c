@@ -29,8 +29,8 @@
 //to be sure to not modify variable in wrong buffer
 #define GVB(type, ...) GVB_(type, ##__VA_ARGS__, 2, 1)
 #define GVB_(type, i, n, ...) GVB##n(type, i)
-#define GVB1(type, ...) manager.buffer[1-manager.index].type
-#define GVB2(type, i) manager.buffer[1-manager.index].type[i].value
+#define GVB1(type, ...) manager.buffer[1-manager.index.value].type.value
+#define GVB2(type, i) manager.buffer[1-manager.index.value].type[i].value
 
 #define ALIGN16 __attribute__((aligned(16)))
 
@@ -44,9 +44,9 @@ typedef struct
 typedef struct
 {
 		//all power failure resiliant variables listed here
-		uint32_t x ALIGN16;
-		uint32_t y ALIGN16;
-		AlignedVar array[3] ALIGN16;
+		AlignedVar x;
+		AlignedVar y;
+		AlignedVar array[3];
 } CritVar;
 
 typedef struct
@@ -54,26 +54,25 @@ typedef struct
 		//Double buffer
 		CritVar buffer[2];
 		//Signature to know if variables have to be initialized
-		uint32_t signature ALIGN16;
+		AlignedVar signature;
 		//Journaling index
-		uint32_t needCommit ALIGN16;
+		AlignedVar needCommit;
 		//Main index
-		uint32_t index ALIGN16;
+		AlignedVar index;
 	
 } __align(16) StateManager;
 
 //global variables
 GLOBAL_SB2(StateManager, manager);
-GLOBAL_SB2(uint32_t, var); //ignore for presentation
 
 void init_state_manager() {
-	if(GV(manager.signature) != INIT_SIGNATURE) {
-    COPY_VALUE(GV(manager.needCommit), 0);
-    COPY_VALUE(GV(manager.index), 0);
+	if(GV(signature) != INIT_SIGNATURE) {
+    COPY_VALUE(GV(needCommit), 0);
+    COPY_VALUE(GV(index), 0);
 
-		int ind = GV(manager.index);
-		CritVar* buffer1 = &GV(manager.buffer, 1-ind);
-		CritVar* buffer0 = &GV(manager.buffer, ind);
+		int ind = GV(index);
+		CritVar* buffer1 = &manager.buffer[1-ind];
+		CritVar* buffer0 = &manager.buffer[ind];
 		
 		uint32_t *p_buffer1 = (uint32_t *)buffer1;
     uint32_t *p_buffer0 = (uint32_t *)buffer0;
@@ -86,7 +85,7 @@ void init_state_manager() {
     }
 		
 		//init done, set signature
-		COPY_VALUE(GV(manager.signature), INIT_SIGNATURE);
+		COPY_VALUE(GV(signature), INIT_SIGNATURE);
 	}
 }
 
@@ -120,15 +119,15 @@ void init_hw() {
 
 //switch the index to change the buffer with original values
 void commit_state() {
-	COPY_VALUE(GV(manager.needCommit), 1-GV(manager.needCommit));
-	COPY_VALUE(GV(manager.index), GV(manager.needCommit));
+	COPY_VALUE(GV(needCommit), 1-GV(needCommit));
+	COPY_VALUE(GV(index), GV(needCommit));
 }
 
 //rollback to the original values
 void rollback_state() {
-		int ind = GV(manager.index);
-		CritVar* dest = &GV(manager.buffer, 1-ind);
-		CritVar* src = &GV(manager.buffer, ind);
+		int ind = GV(index);
+		CritVar* dest = &manager.buffer[1-ind];
+		CritVar* src = &manager.buffer[ind];
 		// Considering the struct of crit variables as an array
     uint32_t *p_dest = (uint32_t *)dest;
     const uint32_t *p_src = (const uint32_t *)src;
@@ -150,8 +149,7 @@ TASK(1, my_task);
 TASK(2, another_task);
 
 void my_task() {
-	COPY_VALUE(GV(var), 5);
-	am_util_stdio_printf("var = %#x\n", GV(var));
+	
 	am_util_stdio_printf("I am in my_task\n");
   TRANSITION_TO(another_task);
 }
@@ -176,13 +174,14 @@ main(void)
 		COPY_VALUE(GVB(x), 7);
 		COPY_VALUE(GVB(array, 2), 4);
 		am_util_stdio_printf("work buffer x = %X\n", GVB(x));
-		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index].x);
+		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index.value].x.value);
 		for(int i=0; i<3; i++) {
 			am_util_stdio_printf("work buffer array = %X\n", GVB(array, i));
 		}
+		commit_state();
 		rollback_state();
 		am_util_stdio_printf("work buffer x = %X\n", GVB(x));
-		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index].x);
+		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index.value].x.value);
 		for(int i=0; i<3; i++) {
 			am_util_stdio_printf("work buffer array = %X\n", GVB(array, i));
 		}
