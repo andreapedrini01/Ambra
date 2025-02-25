@@ -5,6 +5,8 @@
 
 #define WORDS 4
 
+#define ALIGN16 __attribute__((aligned(16)))
+
 #define __nv __align(16) __attribute__((section("_nv")))
 
 // SRAM array to store values that will be copied in MRAM
