@@ -68,7 +68,7 @@ I (../../../../../../mcu/apollo4l/hal/am_hal_dcu.h)(0x64B6727D)
 I (../../../../../../mcu/apollo4l/regs/am_mcu_apollo4l_info0.h)(0x64B6727E)
 I (../../../../../../mcu/apollo4l/regs/am_mcu_apollo4l_info1.h)(0x64B6727E)
 I (../../../../../../mcu/apollo4l/regs/am_mcu_apollo4l_otp.h)(0x64B6727E)
-F (..\src\apollo4_project.c)(0x67B70D5A)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 -Otime --apcs=interwork --split_sections -I ../../../../../../mcu/apollo4l -I ../../../../../../CMSIS/AmbiqMicro/Include -I ../src -I ../../../../../../devices -I ../../../../../../CMSIS/ARM/Include -I ../../../../bsp -I ../../../../../../utils -I ../../../../../.. -I ..\libapollo -I ..\libalpaca --reduce_paths-IC:\Users\andre\AppData\Local\Arm\Packs\AmbiqMicro\Apollo_DFP\1.4.1\Device\Include-D__UVISION_VERSION="541" -DAPOLLO4p_2048 -DAM_PACKAGE_BGA -DAM_PART_APOLLO4L -Dkeil-o .\bin\apollo4_project.o --omf_browse .\bin\apollo4_project.crf --depend .\bin\apollo4_project.d)
+F (..\src\apollo4_project.c)(0x67B77296)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 -Otime --apcs=interwork --split_sections -I ../../../../../../mcu/apollo4l -I ../../../../../../CMSIS/AmbiqMicro/Include -I ../src -I ../../../../../../devices -I ../../../../../../CMSIS/ARM/Include -I ../../../../bsp -I ../../../../../../utils -I ../../../../../.. -I ..\libapollo -I ..\libalpaca --reduce_paths-IC:\Users\andre\AppData\Local\Arm\Packs\AmbiqMicro\Apollo_DFP\1.4.1\Device\Include-D__UVISION_VERSION="541" -DAPOLLO4p_2048 -DAM_PACKAGE_BGA -DAM_PART_APOLLO4L -Dkeil-o .\bin\apollo4_project.o --omf_browse .\bin\apollo4_project.crf --depend .\bin\apollo4_project.d)
 I (../../../../../../mcu/apollo4l/am_mcu_apollo.h)(0x64B6727D)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\stdarg.h)(0x5E8E9F32)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\stdbool.h)(0x5E8E9F32)
@@ -143,8 +143,8 @@ I (../../../../../../devices/am_devices_button.h)(0x64B6727C)
 I (../../../../../../devices/am_devices_display_generic.h)(0x64B6727C)
 I (../../../../../../devices/am_devices_display_types.h)(0x64B6727C)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\string.h)(0x5E8E9F32)
-I (..\src\../libalpaca/alpaca.h)(0x67B6F993)
-I (..\src\../libalpaca/../libapollo/mem.h)(0x67B225AB)
+I (..\src\../libalpaca/alpaca.h)(0x67B76B94)
+I (..\src\../libalpaca/../libapollo/mem.h)(0x67B74CDC)
 I (../../../../../../utils/am_util.h)(0x64B67290)
 I (../../../../../../utils/am_util_debug.h)(0x64B67290)
 I (../../../../../../utils/am_util_delay.h)(0x64B67290)
@@ -304,8 +304,8 @@ I (../../../../../../utils/am_util_string.h)(0x64B67290)
 F (../keil/startup_keil.s)(0x64B67219)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 -Otime --apcs=interwork --split_sections -I ../../../../../../mcu/apollo4l -I ../../../../../../CMSIS/AmbiqMicro/Include -I ../src -I ../../../../../../devices -I ../../../../../../CMSIS/ARM/Include -I ../../../../bsp -I ../../../../../../utils -I ../../../../../.. -I ..\libapollo -I ..\libalpaca --reduce_paths-IC:\Users\andre\AppData\Local\Arm\Packs\AmbiqMicro\Apollo_DFP\1.4.1\Device\Include-D__UVISION_VERSION="541" -DAPOLLO4p_2048 -DAM_PACKAGE_BGA -DAM_PART_APOLLO4L -Dkeil-o .\bin\startup_keil.o --omf_browse .\bin\startup_keil.crf --depend .\bin\startup_keil.d)
 F (../../../../../../mcu/apollo4l/hal/mcu/keil/bin/libam_hal.lib)(0x64B62E68)()
 F (../../../../bsp/keil/bin/libam_bsp.lib)(0x64B62EE2)()
-F (..\libalpaca\alpaca.h)(0x67B6F993)()
-F (..\libalpaca\alpaca.c)(0x67B064F1)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 -Otime --apcs=interwork --split_sections -I ../../../../../../mcu/apollo4l -I ../../../../../../CMSIS/AmbiqMicro/Include -I ../src -I ../../../../../../devices -I ../../../../../../CMSIS/ARM/Include -I ../../../../bsp -I ../../../../../../utils -I ../../../../../.. -I ..\libapollo -I ..\libalpaca --reduce_paths-IC:\Users\andre\AppData\Local\Arm\Packs\AmbiqMicro\Apollo_DFP\1.4.1\Device\Include-D__UVISION_VERSION="541" -DAPOLLO4p_2048 -DAM_PACKAGE_BGA -DAM_PART_APOLLO4L -Dkeil-o .\bin\alpaca.o --omf_browse .\bin\alpaca.crf --depend .\bin\alpaca.d)
+F (..\libalpaca\alpaca.h)(0x67B76B94)()
+F (..\libalpaca\alpaca.c)(0x67B77401)(--c99 -c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 -Otime --apcs=interwork --split_sections -I ../../../../../../mcu/apollo4l -I ../../../../../../CMSIS/AmbiqMicro/Include -I ../src -I ../../../../../../devices -I ../../../../../../CMSIS/ARM/Include -I ../../../../bsp -I ../../../../../../utils -I ../../../../../.. -I ..\libapollo -I ..\libalpaca --reduce_paths-IC:\Users\andre\AppData\Local\Arm\Packs\AmbiqMicro\Apollo_DFP\1.4.1\Device\Include-D__UVISION_VERSION="541" -DAPOLLO4p_2048 -DAM_PACKAGE_BGA -DAM_PART_APOLLO4L -Dkeil-o .\bin\alpaca.o --omf_browse .\bin\alpaca.crf --depend .\bin\alpaca.d)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\stdarg.h)(0x5E8E9F32)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\string.h)(0x5E8E9F32)
 I (../../../../bsp/am_bsp.h)(0x64B6720E)
@@ -391,6 +391,6 @@ I (../../../../../../utils/am_util_time.h)(0x64B67290)
 I (../../../../../../utils/am_util_ble_cooper.h)(0x64B67290)
 I (C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\include\stdio.h)(0x5E8E9F32)
 I (../src/../constants.h)(0x679115D0)
-I (..\libalpaca\alpaca.h)(0x67B6F993)
-I (..\libalpaca\../libapollo/mem.h)(0x67B225AB)
-F (..\libapollo\mem.h)(0x67B225AB)()
+I (..\libalpaca\alpaca.h)(0x67B76B94)
+I (..\libalpaca\../libapollo/mem.h)(0x67B74CDC)
+F (..\libapollo\mem.h)(0x67B74CDC)()
