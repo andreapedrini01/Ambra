@@ -6,6 +6,7 @@
 #include <../constants.h>
 #include <alpaca.h>
 
+GLOBAL_SB2(StateManager, manager);
 uint8_t* data_dest[] = {NULL};
 unsigned data_size[] = {0};
 uint8_t* data_src[] = {NULL};
@@ -55,6 +56,70 @@ __nv volatile unsigned _numBoots = 0;
 
 __nv unsigned int overflow_counter=0;
 
+/**
+ * @brief Function to be invoked at the beginning of every start
+ */
+void init_state_manager() {
+	if(GV(signature) != INIT_SIGNATURE) {
+    COPY_VALUE(GV(needCommit), 0);
+    COPY_VALUE(GV(index), 0);
+
+		int ind = GV(index);
+		CritVar* buffer1 = &manager.buffer[1-ind];
+		CritVar* buffer0 = &manager.buffer[ind];
+		
+		uint32_t *p_buffer1 = (uint32_t *)buffer1;
+    uint32_t *p_buffer0 = (uint32_t *)buffer0;
+		
+		uint32_t n = sizeof(CritVar) / sizeof(uint32_t);
+		am_util_stdio_printf("n = %X\n", n);
+		for (uint32_t i = 0; i < n; i++) {
+				COPY_VALUE(p_buffer1[i], 0);
+				COPY_VALUE(p_buffer0[i], 0);
+    }
+		
+		//init done, set signature
+		COPY_VALUE(GV(signature), INIT_SIGNATURE);
+	}
+}
+
+/**
+ * @brief Function to be invoked when changing indexes is needed
+ */
+void need_commit(int choice) {
+	switch(choice) {
+		case 0: COPY_VALUE(GV(needCommit), 0);
+		case 1: COPY_VALUE(GV(needCommit), 1);
+	}
+}
+
+/**
+ * @brief Function to be invoked to change original buffer
+ */
+void commit_state() {
+	COPY_VALUE(GV(index), 1-GV(index));
+	need_commit(0);
+}
+
+/**
+ * @brief Function to be invoked when rollback is needed
+ */
+void rollback_state() {
+		int ind = GV(index);
+		CritVar* dest = &manager.buffer[1-ind];
+		CritVar* src = &manager.buffer[ind];
+		// Considering the struct of crit variables as an array
+    uint32_t *p_dest = (uint32_t *)dest;
+    const uint32_t *p_src = (const uint32_t *)src;
+    // Calculate how many words are in CritVar
+    uint32_t n = sizeof(CritVar) / sizeof(uint32_t);
+
+    for (uint32_t i = 0; i < n; i++) {
+        if (p_dest[i] != p_src[i]) {
+            COPY_VALUE(p_dest[i], p_src[i]);
+        }
+    }
+}
 
 /**
  * @brief Function to be invoked at the beginning of every task
@@ -62,31 +127,26 @@ __nv unsigned int overflow_counter=0;
 void task_prologue()
 {
     // increment version
-    if (_numBoots == 0xFFFF)
-    {
-        clear_isDirty();
-        ++_numBoots;
-    }
-    ++_numBoots;
+//    if (_numBoots == 0xFFFF)
+//    {
+//        clear_isDirty();
+//        ++_numBoots;
+//    }
+//    ++_numBoots;
     // commit if needed
-    if (curctx->needCommit)
+    if (curctx->needCommit || GV(needCommit))
     {
-        while (gv_index < num_dirty_gv)
-        {
-            uint8_t *w_data_dest = *(data_dest_base + gv_index);
-            uint8_t *w_data_src = *(data_src_base + gv_index);
-            unsigned w_data_size = *(data_size_base + gv_index);
-            memcpy(w_data_dest, w_data_src, w_data_size);
-            ++gv_index;
-        }
-        num_dirty_gv = 0;
-        gv_index = 0;
+//        num_dirty_gv = 0;
+//        gv_index = 0;
+				commit_state();
         curctx->needCommit = 0;
     }
-    else
-    {
-        num_dirty_gv = 0;
-    }
+//    else
+//    {
+//        num_dirty_gv = 0;
+//    }
+		
+		rollback_state();
 }
 
 /**
@@ -98,6 +158,7 @@ void task_prologue()
 void transition_to(task_t *next_task)
 {
     // double-buffered update to deal with power failure
+		need_commit(1);
     context_t *next_ctx;
     next_ctx = (curctx == &context_0 ? &context_1 : &context_0);
     next_ctx->task = next_task;
@@ -108,6 +169,7 @@ void transition_to(task_t *next_task)
 
     // fire task prologue
     task_prologue();
+		next_task->func();
     // jump to next tast
 //    __asm__ volatile ( // volatile because output operands unused by C
 //            "mov #0x2400, r1\n"

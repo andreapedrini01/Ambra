@@ -9,6 +9,35 @@ typedef void (task_func_t)(void);
 typedef unsigned task_idx_t;
 
 #define CUR_TASK (curctx->task)
+#define INIT_SIGNATURE  0xA90110
+
+/** @brief Critical variables */
+typedef struct
+{
+	uint32_t value ALIGN16;
+} AlignedVar;
+
+typedef struct
+{
+		//all power failure resiliant variables listed here
+		AlignedVar x;
+		AlignedVar y;
+		AlignedVar array[3] ALIGN16;
+} CritVar;
+
+/** @brief manager for the variables */
+typedef struct
+{
+		//Double buffer
+		CritVar buffer[2];
+		//Signature to know if variables have to be initialized
+		AlignedVar signature;
+		//Journaling index
+		AlignedVar needCommit;
+		//Main index
+		AlignedVar index;
+	
+} __align(16) StateManager;
 
 /** @brief Task */
 typedef struct task_t {
@@ -27,6 +56,7 @@ typedef struct _context_t {
 	uint8_t needCommit;
 } context_t;
 
+extern StateManager manager;
 extern uint8_t* data_src[];
 extern uint8_t* data_dest[];
 extern unsigned data_size[];
@@ -45,6 +75,10 @@ extern void clear_isDirty();
  */
 extern void init();
 
+void init_state_manager(void);
+void need_commit(int choice);
+void commit_state(void);
+void rollback_state(void);
 void task_prologue();
 void transition_to(task_t *task);
 void write_to_gbuf(uint8_t *data_src, uint8_t *data_dest, size_t var_size); 
@@ -132,6 +166,13 @@ void _init();
 #define GV_(type, i, n, ...) GV##n(type, i)
 #define GV1(type, ...) manager.type.value
 #define GV2(type, i) manager.type[i].value
+
+//use this to modify your work variable
+//to be sure to not modify variable in wrong buffer
+#define GVB(type, ...) GVB_(type, ##__VA_ARGS__, 2, 1)
+#define GVB_(type, i, n, ...) GVB##n(type, i)
+#define GVB1(type, ...) manager.buffer[1-manager.index.value].type.value
+#define GVB2(type, i) manager.buffer[1-manager.index.value].type[i].value
 
 /** @brief Transfer control to the given task
  *  @param task     Name of the task function
