@@ -10,13 +10,21 @@ typedef unsigned task_idx_t;
 
 #define CUR_TASK (curctx->task)
 #define INIT_SIGNATURE  0xA90110
+#define TRUE 1
+#define FALSE 0
 
-/** @brief Critical variables */
+typedef enum {
+	READY,
+	COMMIT,
+	TERMINATED
+} State;
+
 typedef struct
 {
 	uint32_t value ALIGN16;
 } AlignedVar;
 
+/** @brief Critical variables */
 typedef struct
 {
 		//all power failure resiliant variables listed here
@@ -46,25 +54,18 @@ typedef struct task_t {
 	/** @brief index (only used for showing progress) */
 	task_idx_t idx;
 	/** @brief helpful for keeping track of state and return task */
+	State state ALIGN16;
 } task_t;
 
 /** @brief Execution context */
 typedef struct _context_t {
-	/** @brief current running task */
-	task_t *task;
 	/** @brief indicate whether to jump to commit stage on power failure*/
-	uint8_t needCommit;
+	uint32_t needCommit ALIGN16;
+	/** @brief current running task */
+	task_t *task ALIGN16;
 } context_t;
 
 extern StateManager manager;
-extern uint8_t* data_src[];
-extern uint8_t* data_dest[];
-extern unsigned data_size[];
-extern uint8_t** data_src_base;
-extern uint8_t** data_dest_base;
-extern unsigned* data_size_base;
-extern volatile unsigned _numBoots;
-extern volatile unsigned num_dirty_gv;
 extern context_t * volatile curctx;
 /** @brief LLVM generated function that clears all isDirty_ array */
 extern void clear_isDirty();
@@ -73,13 +74,14 @@ extern void clear_isDirty();
  *           direction. The application must define this function because
  *           different app uses different GPIO.
  */
-extern void init();
+extern void init(void);
 
 void init_state_manager(void);
-void need_commit(int choice);
+void need_commit_buffer(int choice);
 void commit_state(void);
 void rollback_state(void);
-void task_prologue();
+void update_task_state(context_t* context, State newState);
+void task_prologue(void);
 void transition_to(task_t *task);
 void write_to_gbuf(uint8_t *data_src, uint8_t *data_dest, size_t var_size); 
 
@@ -140,7 +142,7 @@ void _entry_task() { TRANSITION_TO(task); }
  *           current task pointer. The entry function is defined in the user
  *           application through a macro provided by our header.
  */
-void _init();
+void _init(void);
 
 /** @brief Declare the function to be called on each boot
  *  @details The same notes apply as for entry task.
@@ -168,7 +170,7 @@ void _init();
 #define GV2(type, i) manager.type[i].value
 
 //use this to modify your work variable
-//to be sure to not modify variable in wrong buffer
+//to be sure to not modify variables in wrong buffer
 #define GVB(type, ...) GVB_(type, ##__VA_ARGS__, 2, 1)
 #define GVB_(type, i, n, ...) GVB##n(type, i)
 #define GVB1(type, ...) manager.buffer[1-manager.index.value].type.value
