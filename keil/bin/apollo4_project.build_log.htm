@@ -27,45 +27,33 @@ Project File Date:  01/22/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Users\andre\AppData\Local\Keil_v5\ARM\ARMCompiler_506_Windows_x86_b960\Bin'
 Rebuild target 'apollo4_project'
-compiling am_util_string.c...
 compiling startup_keil.s...
+compiling am_util_string.c...
 compiling am_util_stdio.c...
-compiling am_util_id.c...
-compiling am_resources.c...
 compiling am_util_delay.c...
+compiling am_resources.c...
 compiling apollo4_project.c...
-..\src\../libalpaca/alpaca.h(70): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
+..\src\../libalpaca/alpaca.h(71): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
   extern void clear_isDirty();
-..\src\../libalpaca/alpaca.h(76): warning:  #1295-D: Deprecated declaration init - give arg types
-  extern void init();
-..\src\../libalpaca/alpaca.h(82): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
-  void task_prologue();
-..\src\../libalpaca/alpaca.h(143): warning:  #1295-D: Deprecated declaration _init - give arg types
-  void _init();
 ..\src\apollo4_project.c(57): warning:  #1295-D: Deprecated declaration my_task - give arg types
   void my_task();
 ..\src\apollo4_project.c(58): warning:  #1295-D: Deprecated declaration another_task - give arg types
   void another_task();
 ..\src\apollo4_project.c(73): warning:  #1295-D: Deprecated declaration _entry_task - give arg types
   ENTRY_TASK(my_task);
-..\src\apollo4_project.c: 7 warnings, 0 errors
+..\src\apollo4_project.c: 4 warnings, 0 errors
+compiling am_util_id.c...
 compiling alpaca.c...
-..\libalpaca\alpaca.h(70): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
+..\libalpaca\alpaca.h(71): warning:  #1295-D: Deprecated declaration clear_isDirty - give arg types
   extern void clear_isDirty();
-..\libalpaca\alpaca.h(76): warning:  #1295-D: Deprecated declaration init - give arg types
-  extern void init();
-..\libalpaca\alpaca.h(82): warning:  #1295-D: Deprecated declaration task_prologue - give arg types
-  void task_prologue();
-..\libalpaca\alpaca.h(143): warning:  #1295-D: Deprecated declaration _init - give arg types
-  void _init();
-..\libalpaca\alpaca.c: 4 warnings, 0 errors
+..\libalpaca\alpaca.c: 1 warning, 0 errors
 linking...
 .\linker_script.sct(18): warning: L6314W: No section matches pattern *.o(.ramfunc).
-Program Size: Code=12488 RO-data=752 RW-data=612 ZI-data=8000  
+Program Size: Code=13048 RO-data=836 RW-data=568 ZI-data=8000  
 Finished: 0 information, 1 warning and 0 error messages.
 After Build - User command #1: fromelf --bin --output bin\apollo4_project.bin bin\apollo4_project.axf
 After Build - User command #2: fromelf -cedrst --output bin\apollo4_project.txt bin\apollo4_project.axf
-".\bin\apollo4_project.axf" - 0 Error(s), 12 Warning(s).
+".\bin\apollo4_project.axf" - 0 Error(s), 6 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -78,7 +66,7 @@ Package Vendor: AmbiqMicro
   C:/Users/andre/AppData/Local/Arm/Packs/AmbiqMicro/Apollo_DFP/1.4.1/Device/Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:11
+Build Time Elapsed:  00:00:13
 </pre>
 </body>
 </html>
