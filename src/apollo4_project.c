@@ -83,23 +83,8 @@ main(void)
 {
     _init();
 	
-//		COPY_VALUE(GVB(x), 7);
-//		am_util_stdio_printf("work buffer x = %X\n", GVB(x));
-//		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index.value].x.value);
-//		for(int i=0; i<3; i++) {
-//			COPY_VALUE(GVB(array, i), 4);
-//			am_util_stdio_printf("work buffer array = %X\n", GVB(array, i));
-//		}
-//		commit_state();
-//		rollback_state();
-//		am_util_stdio_printf("work buffer x = %X\n", GVB(x));
-//		am_util_stdio_printf("original buffer x = %X\n", manager.buffer[manager.index.value].x.value);
-//		for(int i=0; i<3; i++) {
-//			am_util_stdio_printf("work buffer array = %X\n", GVB(array, i));
-//		}
-	
-		task_prologue();
-		curctx->task->func();
+//		task_prologue();
+//		curctx->task->func();
 	
 		//
     // We are done printing.
