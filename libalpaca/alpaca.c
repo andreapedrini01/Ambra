@@ -138,7 +138,7 @@ void transition_to(task_t *next_task)
 		COPY_VALUE(&next_ctx->needCommit, TRUE);
 		COPY_PTR(next_ctx->task, next_task);
 		update_task_state(next_ctx, READY);
-	
+
     // atomic update of curctx
 		if(curctx->needCommit == FALSE) {	need_commit_buffer(TRUE);	}
     COPY_PTR(curctx, next_ctx);
