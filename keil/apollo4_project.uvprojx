@@ -470,6 +470,11 @@
               <FileType>5</FileType>
               <FilePath>..\libapollo\mem.h</FilePath>
             </File>
+            <File>
+              <FileName>critical_variables.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\libapollo\critical_variables.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
