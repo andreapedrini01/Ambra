@@ -54,8 +54,8 @@ void init_hw() {
 }
 
 //tasks
-void my_task();
-void another_task();
+void my_task(void);
+void another_task(void);
 
 TASK(1, my_task);
 TASK(2, another_task);
@@ -68,6 +68,7 @@ void my_task() {
 
 void another_task() {
 	am_util_stdio_printf("I am in another_task\n");
+	TRANSITION_TO(my_task);
 }
 
 ENTRY_TASK(my_task);
@@ -78,24 +79,32 @@ INIT_FUNC(init_hw);
 // Main
 //
 //*****************************************************************************
-int
-main(void)
+int main(void)
 {
     _init();
 	
-//		task_prologue();
-//		curctx->task->func();
+		while (1)
+    {
+        task_prologue();
+			am_util_stdio_printf("Current task code: %d\n", CUR_TASK->idx);
+				switch(CUR_TASK->idx) {
+					case 0:
+						_entry_task();
+						break;
+					case 1: 
+						my_task();
+						break;
+					case 2: 
+						another_task();
+				}
+    }
 	
 		//
     // We are done printing.
     // Disable debug printf messages on ITM.
     //
-    am_util_stdio_printf("Done with prints. Entering While loop\n");
-    am_bsp_debug_printf_disable();
+//    am_util_stdio_printf("Done with prints. Entering While loop\n");
+//    am_bsp_debug_printf_disable();
 		
-		while (1)
-    {
-        // sleep
-        am_hal_sysctrl_sleep(AM_HAL_SYSCTRL_SLEEP_DEEP);
-    }
+		
 }
