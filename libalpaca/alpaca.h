@@ -1,12 +1,11 @@
 #ifndef ALPACA_H
 #define ALPACA_H
 
-#include <stddef.h>
-#include <stdint.h>
+#include "../libapollo/critical_variables.h"
 #include "../libapollo/mem.h"
 
 typedef void (task_func_t)(void);
-typedef unsigned task_idx_t;
+typedef uint32_t task_idx_t;
 
 #define CUR_TASK (curctx->task)
 #define INIT_SIGNATURE  0xA90110
@@ -15,23 +14,9 @@ typedef unsigned task_idx_t;
 
 typedef enum {
 	READY,
-	COMMIT,
-	TERMINATED
+	COMMIT1,
+	COMMIT2
 } State;
-
-typedef struct
-{
-	uint32_t value ALIGN16;
-} AlignedVar;
-
-/** @brief Critical variables */
-typedef struct
-{
-		//all power failure resiliant variables listed here
-		AlignedVar x;
-		AlignedVar y;
-		AlignedVar array[3] ALIGN16;
-} CritVar;
 
 /** @brief manager for the variables */
 typedef struct
@@ -40,10 +25,14 @@ typedef struct
 		CritVar buffer[2];
 		//Signature to know if variables have to be initialized
 		AlignedVar signature;
-		//Journaling index
+		//Commit bit
 		AlignedVar needCommit;
 		//Main index
 		AlignedVar index;
+		//Second index
+		AlignedVar newIndex;
+		//State variable
+		State state ALIGN16;
 	
 } __align(16) StateManager;
 
@@ -67,8 +56,7 @@ typedef struct _context_t {
 
 extern StateManager manager;
 extern context_t * volatile curctx;
-/** @brief LLVM generated function that clears all isDirty_ array */
-extern void clear_isDirty();
+
 /** @brief Function called on every reboot
  *  @details This function usually initializes hardware, such as GPIO
  *           direction. The application must define this function because
@@ -81,6 +69,7 @@ void need_commit_buffer(int choice);
 void commit_state(void);
 void rollback_state(void);
 void update_task_state(context_t* context, State newState);
+void update_buffer_state(State newState);
 void task_prologue(void);
 void transition_to(task_t *task);
 void write_to_gbuf(uint8_t *data_src, uint8_t *data_dest, size_t var_size); 
@@ -133,9 +122,9 @@ extern task_t TASK_SYM_NAME(_entry_task);
  *           of the library.
  */
 #define ENTRY_TASK(task) \
-	void _entry_task(); \
+	void _entry_task(void); \
 	TASK(0, _entry_task) \
-void _entry_task() { TRANSITION_TO(task); }
+void _entry_task(void) { TRANSITION_TO(task); }
 
 /** @brief Init function prototype
  *  @details We rely on the special name of this symbol to initialize the
@@ -168,6 +157,7 @@ void _init(void);
 #define GV_(type, i, n, ...) GV##n(type, i)
 #define GV1(type, ...) manager.type.value
 #define GV2(type, i) manager.type[i].value
+#define GV_STATE manager.state
 
 //use this to modify your work variable
 //to be sure to not modify variables in wrong buffer

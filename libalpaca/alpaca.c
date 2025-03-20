@@ -7,13 +7,6 @@
 #include <alpaca.h>
 
 GLOBAL_SB2(StateManager, manager);
-uint8_t* data_dest[] = {NULL};
-unsigned data_size[] = {0};
-uint8_t* data_src[] = {NULL};
-
-void clear_isDirty() {
-    // Implementazione
-}
 
 /**
  * @brief double buffered context
@@ -68,12 +61,20 @@ void need_commit_buffer(int choice) {
  * @brief Function to be invoked to change original buffer
  */
 void commit_state() { 
-	COPY_VALUE(&GV(index), 1 ^ GV(index));
-	need_commit_buffer(FALSE);					//it isn't power failure resiliant
+	switch(GV_STATE) {
+		case READY: break;
+		case COMMIT1:
+			COPY_VALUE(&GV(newIndex), 1 ^ GV(index));
+			update_buffer_state(COMMIT2);
+		case COMMIT2:
+			COPY_VALUE(&GV(index), GV(newIndex));
+			need_commit_buffer(FALSE);
+			update_buffer_state(READY);
+	}
 }
 
 /**
- * @brief Function to be invoked when rollback is needed
+ * @brief Function to be invoked when a buffers rollback is needed
  */
 void rollback_state() {
 		int ind = GV(index);
@@ -90,35 +91,33 @@ void rollback_state() {
             COPY_VALUE(&p_dest[i], p_src[i]);
         }
     }
-		
-		//rollback context
-		
 }
 
 void update_task_state(context_t* context, State newState) {
 		COPY_VALUE(&(context->task->state), newState);
 }
 
+void update_buffer_state(State newState) {
+	COPY_VALUE(&GV_STATE, newState);
+}
+
 /**
  * @brief Function to be invoked at the beginning of every task
  */
 void task_prologue()
-{
-	if (GV(needCommit))
-    {
-				commit_state();
-    }
+{	
+	commit_state();
 		
 	switch(curctx->task->state){
 		case READY: 
 			rollback_state();
-			//execute the task, to do in transition to or in main -only for the first time-
+			//execute the task, to do in main
 			break;
-		case COMMIT: 
+		case COMMIT1: 
 			transition_to(curtsk);
 			break;
-		case TERMINATED:		//is it necessary?
-			rollback_state();
+		case COMMIT2:
+			transition_to(curtsk);
 	}
 }
 
@@ -130,29 +129,22 @@ void task_prologue()
 void transition_to(task_t *next_task)
 {
 		COPY_PTR(curtsk, next_task);
-		update_task_state(curctx, COMMIT);
+		context_t *next_ctx;
 	
-    // double-buffered update to deal with power failure
-    context_t *next_ctx;
-    next_ctx = (curctx == &context_0 ? &context_1 : &context_0);
-		COPY_VALUE(&next_ctx->needCommit, TRUE);
-		COPY_PTR(next_ctx->task, next_task);
-		update_task_state(next_ctx, READY);
-
-    // atomic update of curctx
-		if(curctx->needCommit == FALSE) {	need_commit_buffer(TRUE);	}
-    COPY_PTR(curctx, next_ctx);
-		COPY_VALUE(&curctx->needCommit, FALSE);
-
-    // fire task prologue
-    task_prologue();
-    // jump to next task
-//    __asm__ volatile ( // volatile because output operands unused by C
-//            "mov #0x2400, r1\n"
-//            "br %[ntask]\n"
-//            :
-//            : [ntask] "r" (next_task->func)
-//    );
+		switch(curctx->task->state) {
+			case READY: 
+				update_task_state(curctx, COMMIT1);
+			case COMMIT1:
+				update_buffer_state(COMMIT1);
+			case COMMIT2:
+				update_task_state(curctx, COMMIT2);
+				next_ctx = (curctx == &context_0 ? &context_1 : &context_0);
+				COPY_VALUE(&next_ctx->needCommit, TRUE);
+				COPY_PTR(next_ctx->task, next_task);
+				update_task_state(next_ctx, READY);
+				COPY_PTR(curctx, next_ctx);
+		}
+		
 }
 
 /** @brief Entry point upon reboot */
