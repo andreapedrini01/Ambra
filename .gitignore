@@ -1,7 +1,7 @@
 # Local configuration file
 keil/apollo4_project.uvoptx
 keil/apollo4_project.uvprojx
-keil/apollo4_project.uvguix.andre
+keil/apollo4_project.uvguix.*
 
 # Output generato
 /keil/Listings/
