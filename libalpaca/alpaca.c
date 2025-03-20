@@ -146,23 +146,3 @@ void transition_to(task_t *next_task)
 		}
 		
 }
-
-/** @brief Entry point upon reboot */
-//int main()
-//{
-////    setvbuf(stdout, NULL, _IONBF, 0);
-//    __enable_irq();				//modified for apollo4 blue lite
-//    init();
-
-//    // check for update
-//    task_prologue();
-
-//    // jump to curctx
-////    __asm__ volatile ( // volatile because output operands unused by C
-////            "br %[nt]\n"
-////            : /* no outputs */
-////            : [nt] "r" (curctx->task->func)
-////    );
-//    return 0;
-//}
-
