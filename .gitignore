@@ -1,9 +1,9 @@
 # Local configuration file
-Project.uvguix.*
+apollo4_project.uvguix.*
 
 # Output generato
 /keil/Listings/
-/keil/Bin/
+/keil/bin/
 
 # Useless directories
 /keil6/
