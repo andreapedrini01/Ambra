@@ -3,7 +3,6 @@
 #include <am_bsp.h>
 #include <am_util.h>
 #include <stdio.h>
-#include <../constants.h>
 #include <alpaca.h>
 
 GLOBAL_SB2(StateManager, manager);
