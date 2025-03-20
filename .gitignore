@@ -7,9 +7,11 @@ keil/apollo4_project.uvguix.*
 /keil/Listings/
 /keil/bin/
 
+
 # Useless directories
 /keil6/
 /iar/
+/gcc/
 
 # File temporanei o di sistema
 *.tmp
