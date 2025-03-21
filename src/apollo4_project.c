@@ -1,9 +1,5 @@
-#include "am_mcu_apollo.h"
-#include "am_bsp.h"
-#include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include "../libapollo/hardware.h"
 #include "../libalpaca/alpaca.h"
 
 //*****************************************************************************
@@ -28,33 +24,6 @@
 
 #define ENABLE_DEBUGGER
 
-void init_hw() {
-		//
-    // Set the default cache configuration
-    //
-    am_hal_cachectrl_config(&am_hal_cachectrl_defaults);
-    am_hal_cachectrl_enable();
-
-    //
-    // Configure the board for low power operation.
-    //
-    am_bsp_low_power_init();
-
-    //
-    // Initialize the printf interface for ITM output
-    //
-    if (am_bsp_debug_printf_enable())
-    {
-        // Cannot print - so no point proceeding
-        while(1);
-    }
-		
-		am_util_stdio_terminal_clear();
-		
-		__enable_irq();
-		init_state_manager();
-}
-
 //tasks
 void compute_convolution_task(void);
 void populate(void);
@@ -75,7 +44,7 @@ void populate() {
 
 void compute_convolution_task() {
 	if (GVB(idx) >= OUTPUT_SIZE) {
-        am_util_stdio_printf("Convoluzione completata!\n");
+        printf_apollo("Convoluzione completata!\n");
         return;
     }
 
@@ -87,7 +56,7 @@ void compute_convolution_task() {
 
     COPY_VALUE(&GVB(output, index), sum);
 
-    am_util_stdio_printf("Output[%d] = %d\n", index, sum);
+		printf_apollo("Output[%d] = %d\n", index, sum);
 
     COPY_VALUE(&GVB(idx), index + 1);
 
@@ -111,7 +80,7 @@ int main(void)
 		while (1)
     {
         task_prologue();
-			am_util_stdio_printf("Current task code: %d\n", CUR_TASK->idx);
+			printf_apollo("Current task code: %d\n", CUR_TASK->idx);
 				switch(CUR_TASK->idx) {
 					case 0:
 						_entry_task();

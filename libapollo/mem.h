@@ -2,6 +2,7 @@
 #define _LIBAPOLLO_MEM_H
 
 #include "am_util.h"
+#include "hardware.h"
 
 #define WORDS 4
 
@@ -28,7 +29,7 @@
     {                                                                           				\
         if (((uintptr_t)(dest) % 16) != 0)                             								  \
         {                                                                       				\
-            am_util_stdio_printf("The starting address is not alligned to 16 byte.\n"); \
+            printf_apollo("The starting address is not alligned to 16 byte.\n"); 				\
         }                                                                       				\
         else                                                                    				\
         {                                                                       				\
@@ -41,7 +42,7 @@
                                                       (buffer),                  				\
                                                       ((uint32_t*)dest),         		  	\
                                                       (WORDS));                  				\
-            am_util_stdio_printf("MRAM program returnCode = %d\n", returnCode); 				\
+            printf_apollo("MRAM program returnCode = %d\n", returnCode); 								\
         }                                                                       				\
     } while (0)
 		
@@ -89,7 +90,7 @@
     {                                                                           				\
         if ((((uintptr_t)(dest) % 16) != 0) || src == NULL)             							  \
         {                                                                       				\
-            am_util_stdio_printf("The starting address is not alligned to 16 byte				\
+            printf_apollo("The starting address is not alligned to 16 byte							\
 							or src address is NULL.\n"); 																							\
         }                                                                       				\
         else                                                                    				\
@@ -104,7 +105,7 @@
                                                       (buffer),                  				\
                                                       ((uint32_t *)(&dest)),	  			 	\
                                                       (WORDS));                  				\
-            am_util_stdio_printf("MRAM program returnCode = %d\n", returnCode); 				\
+            printf_apollo("MRAM program returnCode = %d\n", returnCode); 								\
         }                                                                       				\
     } while (0)
 		

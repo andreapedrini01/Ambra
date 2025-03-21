@@ -38,7 +38,6 @@ void init_state_manager() {
     uint32_t *p_buffer0 = (uint32_t *)buffer0;
 		
 		uint32_t n = sizeof(CritVar) / sizeof(uint32_t);
-		am_util_stdio_printf("n = %X\n", n);
 		for (uint32_t i = 0; i < n; i++) {
 				COPY_VALUE(&p_buffer1[i], 0);
 				COPY_VALUE(&p_buffer0[i], 0);
