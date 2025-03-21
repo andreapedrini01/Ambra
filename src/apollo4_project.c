@@ -1,6 +1,9 @@
 #include "am_mcu_apollo.h"
 #include "am_bsp.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include "../libalpaca/alpaca.h"
 
 //*****************************************************************************
@@ -26,7 +29,6 @@
 #define ENABLE_DEBUGGER
 
 void init_hw() {
-
 		//
     // Set the default cache configuration
     //
@@ -54,24 +56,47 @@ void init_hw() {
 }
 
 //tasks
-void my_task(void);
-void another_task(void);
+void compute_convolution_task(void);
+void populate(void);
 
-TASK(1, my_task);
-TASK(2, another_task);
+TASK(1, populate);
+TASK(2, compute_convolution_task);
 
-void my_task() {
+void populate() {
+	for (size_t i = 0; i < INPUT_SIZE; i++) {
+		COPY_VALUE(&GVB(input, i), (uint32_t)rand());
+  }
 	
-	am_util_stdio_printf("I am in my_task\n");
-  TRANSITION_TO(another_task);
+	for (size_t i = 0; i < KERNEL_SIZE; i++) {
+		COPY_VALUE(&GVB(kernel, i), (uint32_t)rand());
+  }
+	TRANSITION_TO(compute_convolution_task);
 }
 
-void another_task() {
-	am_util_stdio_printf("I am in another_task\n");
-	TRANSITION_TO(my_task);
+void compute_convolution_task() {
+	if (GVB(idx) >= OUTPUT_SIZE) {
+        am_util_stdio_printf("Convoluzione completata!\n");
+        return;
+    }
+
+    uint32_t sum = 0;
+		uint32_t index = GVB(idx);
+    for (int j = 0; j < KERNEL_SIZE; j++) {
+        sum += GVB(input, index+j) * GVB(kernel, j);
+    }
+
+    COPY_VALUE(&GVB(output, index), sum);
+
+    am_util_stdio_printf("Output[%d] = %d\n", index, sum);
+
+    COPY_VALUE(&GVB(idx), index + 1);
+
+    if (index < OUTPUT_SIZE) {
+        TRANSITION_TO(compute_convolution_task);
+    }
 }
 
-ENTRY_TASK(my_task);
+ENTRY_TASK(populate);
 INIT_FUNC(init_hw);
 
 //*****************************************************************************
@@ -92,10 +117,10 @@ int main(void)
 						_entry_task();
 						break;
 					case 1: 
-						my_task();
+						populate();
 						break;
-					case 2: 
-						another_task();
+					case 2:
+						compute_convolution_task();
 				}
     }
 	

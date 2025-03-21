@@ -5,6 +5,9 @@
 #include <stdint.h>
 
 #define ALIGN16 __attribute__((aligned(16)))
+#define INPUT_SIZE 5
+#define KERNEL_SIZE 3
+#define OUTPUT_SIZE (INPUT_SIZE - KERNEL_SIZE + 1)
 
 typedef struct
 {
@@ -28,9 +31,10 @@ typedef struct
 typedef struct
 {
 	//These are for example, change them on what you need
-		AlignedVar x;
-		AlignedVar y;
-		AlignedVar array[3] ALIGN16;
+		AlignedVar idx;
+		AlignedVar input[INPUT_SIZE] ALIGN16;
+		AlignedVar kernel[KERNEL_SIZE] ALIGN16;
+		AlignedVar output[OUTPUT_SIZE] ALIGN16;
 } CritVar;
 
 #endif // CRITICAL_VARIABLES_H
