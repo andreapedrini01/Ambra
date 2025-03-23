@@ -6,6 +6,7 @@ keil/ambra_application.uvguix.*
 # Output generato
 /keil/Listings/
 /keil/bin/
+/keil/JLinkLog.txt
 
 
 # Useless directories
