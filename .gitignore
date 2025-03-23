@@ -1,7 +1,7 @@
 # Local configuration file
-keil/apollo4_project.uvoptx
-keil/apollo4_project.uvprojx
-keil/apollo4_project.uvguix.*
+keil/ambra_application.uvoptx
+keil/ambra_application.uvprojx
+keil/ambra_application.uvguix.*
 
 # Output generato
 /keil/Listings/
