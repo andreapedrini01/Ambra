@@ -1,4 +1,4 @@
-# APOLLO4 project
+# AMBRA library
 
 ## Importing repository
 
