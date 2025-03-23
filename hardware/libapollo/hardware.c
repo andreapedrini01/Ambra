@@ -4,7 +4,7 @@
 #include "am_util.h"
 #include <stdarg.h>
 #include <stdio.h>
-#include "../libalpaca/alpaca.h"
+#include "../libambra/ambra.h"
 
 void cache_configuration() {
 	am_hal_cachectrl_config(&am_hal_cachectrl_defaults);

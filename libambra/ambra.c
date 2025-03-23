@@ -3,7 +3,7 @@
 #include <am_bsp.h>
 #include <am_util.h>
 #include <stdio.h>
-#include <alpaca.h>
+#include "ambra.h"
 
 GLOBAL_SB2(StateManager, manager);
 
@@ -27,8 +27,8 @@ __nv task_t *volatile curtsk = TASK_REF(_entry_task);
  */
 void init_state_manager() {
 	if(GV(signature) != INIT_SIGNATURE) {
-    COPY_VALUE(&GV(needCommit), FALSE);
-    COPY_VALUE(&GV(index), FALSE);
+    MEM_WR(&GV(needCommit), FALSE);
+    MEM_WR(&GV(index), FALSE);
 
 		int ind = GV(index);
 		CritVar* buffer1 = &manager.buffer[1-ind];
@@ -39,12 +39,12 @@ void init_state_manager() {
 		
 		uint32_t n = sizeof(CritVar) / sizeof(uint32_t);
 		for (uint32_t i = 0; i < n; i++) {
-				COPY_VALUE(&p_buffer1[i], 0);
-				COPY_VALUE(&p_buffer0[i], 0);
+				MEM_WR(&p_buffer1[i], 0);
+				MEM_WR(&p_buffer0[i], 0);
     }
 		
 		//init done, set signature
-		COPY_VALUE(&GV(signature), INIT_SIGNATURE);
+		MEM_WR(&GV(signature), INIT_SIGNATURE);
 	}
 }
 
@@ -52,7 +52,7 @@ void init_state_manager() {
  * @brief Function to be invoked when changing indexes is needed
  */
 void need_commit_buffer(int choice) {
-	COPY_VALUE(&GV(needCommit), choice);
+	MEM_WR(&GV(needCommit), choice);
 }
 
 /**
@@ -62,10 +62,10 @@ void commit_state() {
 	switch(GV_STATE) {
 		case READY: break;
 		case COMMIT1:
-			COPY_VALUE(&GV(newIndex), 1 ^ GV(index));
+			MEM_WR(&GV(newIndex), 1 ^ GV(index));
 			update_buffer_state(COMMIT2);
 		case COMMIT2:
-			COPY_VALUE(&GV(index), GV(newIndex));
+			MEM_WR(&GV(index), GV(newIndex));
 			need_commit_buffer(FALSE);
 			update_buffer_state(READY);
 	}
@@ -86,17 +86,17 @@ void rollback_state() {
 	  //rollback buffer
     for (uint32_t i = 0; i < n; i++) {
         if (p_dest[i] != p_src[i]) {
-            COPY_VALUE(&p_dest[i], p_src[i]);
+            MEM_WR(&p_dest[i], p_src[i]);
         }
     }
 }
 
 void update_task_state(context_t* context, State newState) {
-		COPY_VALUE(&(context->task->state), newState);
+		MEM_WR(&(context->task->state), newState);
 }
 
 void update_buffer_state(State newState) {
-	COPY_VALUE(&GV_STATE, newState);
+	MEM_WR(&GV_STATE, newState);
 }
 
 /**
@@ -137,7 +137,7 @@ void transition_to(task_t *next_task)
 			case COMMIT2:
 				update_task_state(curctx, COMMIT2);
 				next_ctx = (curctx == &context_0 ? &context_1 : &context_0);
-				COPY_VALUE(&next_ctx->needCommit, TRUE);
+				MEM_WR(&next_ctx->needCommit, TRUE);
 				COPY_PTR(next_ctx->task, next_task);
 				update_task_state(next_ctx, READY);
 				COPY_PTR(curctx, next_ctx);

@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "../libapollo/hardware.h"
-#include "../libalpaca/alpaca.h"
+#include "../hardware/libapollo/hardware.h"
+#include "../libambra/ambra.h"
 
 //*****************************************************************************
 //
@@ -33,18 +33,18 @@ TASK(2, compute_convolution_task);
 
 void populate() {
 	for (size_t i = 0; i < INPUT_SIZE; i++) {
-		COPY_VALUE(&GVB(input, i), (uint32_t)rand());
+		MEM_WR(&GVB(input, i), 2*i);
   }
 	
 	for (size_t i = 0; i < KERNEL_SIZE; i++) {
-		COPY_VALUE(&GVB(kernel, i), (uint32_t)rand());
+		MEM_WR(&GVB(kernel, i), 3*i);
   }
 	TRANSITION_TO(compute_convolution_task);
 }
 
 void compute_convolution_task() {
 	if (GVB(idx) >= OUTPUT_SIZE) {
-        printf_apollo("Convoluzione completata!\n");
+        printf_apollo("Convolution finished!\n");
         return;
     }
 
@@ -54,11 +54,11 @@ void compute_convolution_task() {
         sum += GVB(input, index+j) * GVB(kernel, j);
     }
 
-    COPY_VALUE(&GVB(output, index), sum);
+    MEM_WR(&GVB(output, index), sum);
 
 		printf_apollo("Output[%d] = %d\n", index, sum);
 
-    COPY_VALUE(&GVB(idx), index + 1);
+    MEM_WR(&GVB(idx), index + 1);
 
     if (index < OUTPUT_SIZE) {
         TRANSITION_TO(compute_convolution_task);
@@ -99,6 +99,4 @@ int main(void)
     //
 //    am_util_stdio_printf("Done with prints. Entering While loop\n");
 //    am_bsp_debug_printf_disable();
-		
-		
 }

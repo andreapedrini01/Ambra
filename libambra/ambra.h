@@ -1,14 +1,12 @@
-#ifndef ALPACA_H
-#define ALPACA_H
+#ifndef AMBRA_H
+#define AMBRA_H
 
-#include "../libapollo/critical_variables.h"
-#include "../libapollo/mem.h"
+#include "../src/critical_variables.h"
 
 typedef void (task_func_t)(void);
 typedef uint32_t task_idx_t;
 
 #define CUR_TASK (curctx->task)
-#define INIT_SIGNATURE  0xA90110
 #define TRUE 1
 #define FALSE 0
 
@@ -98,15 +96,8 @@ __nv task_t TASK_SYM_NAME(func) = { func, idx }; \
 
 /** @brief First task to run when the application starts
  *  @details Symbol is defined by the ENTRY_TASK macro.
- *           This is not wrapped into a delaration macro, because applications
+ *           This is not wrapped into a declaration macro, because applications
  *           are not meant to declare tasks -- internal only.
- *
- *  TODO: An alternative would be to have a macro that defines
- *        the curtask symbol and initializes it to the entry task. The
- *        application would be required to have a definition using that macro.
- *        An advantage is that the names of the tasks in the application are
- *        not constrained, and the whole thing is less magical when reading app
- *        code, but slightly more verbose.
  */
 extern task_t TASK_SYM_NAME(_entry_task);
 
@@ -139,9 +130,7 @@ void _init(void);
 #define INIT_FUNC(func) void _init() { func(); }
 
 /**
- *  @brief way to simply rename vars. I don't need it actually.
- *  I should remove it or rename it..
- *  Actually I should just remove this thing!
+ *  @brief way to simply rename vars.
  */
 #define GLOBAL_SB(type, name, ...) GLOBAL_SB_(type, name, ##__VA_ARGS__, 3, 2)
 #define GLOBAL_SB_(type, name, size, n, ...) GLOBAL_SB##n(type, name, size)
@@ -149,9 +138,7 @@ void _init(void);
 #define GLOBAL_SB3(type, name, size) __nv type name[size]
 
 /**
- *  @brief way to simply reference renamed vars. I don't need it actually.
- *  I should remove it or rename it..
- *  Actually I should just remove this thing!
+ *  @brief way to simply reference manager's vars.
  */
 #define GV(type, ...) GV_(type, ##__VA_ARGS__, 2, 1)
 #define GV_(type, i, n, ...) GV##n(type, i)
@@ -160,14 +147,15 @@ void _init(void);
 #define GV_STATE manager.state
 
 //use this to modify your work variable
-//to be sure to not modify variables in wrong buffer
+//to be sure to not modify variables in wrong buffer.
 #define GVB(type, ...) GVB_(type, ##__VA_ARGS__, 2, 1)
 #define GVB_(type, i, n, ...) GVB##n(type, i)
 #define GVB1(type, ...) manager.buffer[1-manager.index.value].type.value
 #define GVB2(type, i) manager.buffer[1-manager.index.value].type[i].value
 
-/** @brief Transfer control to the given task
+/** @brief Transfer control to the given task.
  *  @param task     Name of the task function
  *  */
 #define TRANSITION_TO(task) transition_to(TASK_REF(task))
-#endif // ALPACA_H
+
+#endif // AMBRA_H

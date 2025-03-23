@@ -5,10 +5,14 @@
 #include "hardware.h"
 
 #define WORDS 4
-
+#define INIT_SIGNATURE  0xA90110
 #define ALIGN16 __attribute__((aligned(16)))
-
 #define __nv __align(16) __attribute__((section("_nv")))
+
+typedef struct
+{
+	uint32_t value ALIGN16;
+} AlignedVar;
 
 /**
  * @brief Macro to store a 32-bit value in a destination address.
@@ -24,7 +28,7 @@
  * @note If `dest` is not 16-byte aligned, an error message is printed, and the 
  *       operation is not executed.
  */
-#define COPY_VALUE(dest, src)                                														\
+#define MEM_WR(dest, src)   		                             														\
     do                                                                         	 				\
     {                                                                           				\
         if (((uintptr_t)(dest) % 16) != 0)                             								  \
@@ -51,13 +55,13 @@
  *
  * This macro copies a structure of type `type` from `src` to `dest`, assuming 
  * both are properly aligned. It treats the structure as an array of `uint32_t` 
- * values and copies them element by element using `COPY_VALUE`.
+ * values and copies them element by element using `MEM_WR`.
  *
  * @param dest  Pointer to the destination structure where data will be copied.
  * @param src   Pointer to the source structure containing the data to copy.
  * @param type  The data type of the structure being copied.
  *
- * @note The `COPY_VALUE` macro is used to copy individual `uint32_t` values.
+ * @note The `MEM_WR` macro is used to copy individual `uint32_t` values.
  */
 #define COPY_STRUCT(dest, src, type)                      \
     do {                                                  \
@@ -65,7 +69,7 @@
         const uint32_t *p_src = (const uint32_t *)(src);  \
         uint32_t n = sizeof(type) / sizeof(uint32_t);     \
         for (uint32_t i = 0; i < n; i++) {                \
-            COPY_VALUE(&p_dest[i], p_src[i]);             \
+            MEM_WR(&p_dest[i], p_src[i]);           		  \
         }                                                 \
     } while (0)
 
