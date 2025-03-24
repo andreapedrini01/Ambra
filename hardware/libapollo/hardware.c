@@ -1,9 +1,3 @@
-#include "hardware.h"
-#include "am_mcu_apollo.h"
-#include "am_bsp.h"
-#include "am_util.h"
-#include <stdarg.h>
-#include <stdio.h>
 #include "../libambra/ambra.h"
 
 void cache_configuration() {
@@ -11,7 +5,16 @@ void cache_configuration() {
 	am_hal_cachectrl_enable();
 }
 
+uint32_t get_time_us(void) {
+	//at 6MHz 6 tick are 1 µs, divide tick per 6	
+  return (am_hal_stimer_counter_get() / 6);
+}
+
 void init_hw() {
+	am_hal_stimer_reset_config();
+	am_hal_stimer_config(AM_HAL_STIMER_HFRC_6MHZ);
+	am_hal_stimer_counter_clear();
+	
 	//
     // Set the default cache configuration
     //

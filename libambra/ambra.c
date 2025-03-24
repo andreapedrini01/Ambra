@@ -58,7 +58,7 @@ void need_commit_buffer(int choice) {
 /**
  * @brief Function to be invoked to change original buffer
  */
-void commit_state() { 
+void commit_state() {
 	switch(GV_STATE) {
 		case READY: break;
 		case COMMIT1:
@@ -142,5 +142,4 @@ void transition_to(task_t *next_task)
 				update_task_state(next_ctx, READY);
 				COPY_PTR(curctx, next_ctx);
 		}
-		
 }

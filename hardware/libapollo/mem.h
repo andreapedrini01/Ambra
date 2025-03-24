@@ -28,26 +28,17 @@ typedef struct
  * @note If `dest` is not 16-byte aligned, an error message is printed, and the 
  *       operation is not executed.
  */
-#define MEM_WR(dest, src)   		                             														\
-    do                                                                         	 				\
-    {                                                                           				\
-        if (((uintptr_t)(dest) % 16) != 0)                             								  \
-        {                                                                       				\
-            printf_apollo("The starting address is not alligned to 16 byte.\n"); 				\
-        }                                                                       				\
-        else                                                                    				\
-        {                                                                       				\
-						uint32_t buffer[4] = {0};																										\
-						buffer[0] = (uint32_t)(src);																								\
-						buffer[1] = 0;                     																					\
-						buffer[2] = 0;																															\
-						buffer[3] = 0;																															\
-            int returnCode = am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,  		    \
-                                                      (buffer),                  				\
-                                                      ((uint32_t*)dest),         		  	\
-                                                      (WORDS));                  				\
-            printf_apollo("MRAM program returnCode = %d\n", returnCode); 								\
-        }                                                                       				\
+#define MEM_WR(dest, src)   		                             							\
+    do                                                                    \
+    {                                                                     \
+        if (((uintptr_t)(dest) & 0xF) == 0)                             	\
+        {                                                                 \
+						uint32_t buffer[4] = {(uint32_t)(src), 0, 0, 0};   						\
+            am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,  		    		\
+                                                    (buffer),             \
+                                                    ((uint32_t*)dest),    \
+                                                    (WORDS));             \
+        }                                                                 \
     } while (0)
 		
 /**
@@ -92,24 +83,13 @@ typedef struct
 #define COPY_PTR(dest, src)                                 														\
     do                                                                         	 				\
     {                                                                           				\
-        if ((((uintptr_t)(dest) % 16) != 0) || src == NULL)             							  \
+        if (((uintptr_t)(dest) & 0xF) == 0 || src != NULL)             							  	\
         {                                                                       				\
-            printf_apollo("The starting address is not alligned to 16 byte							\
-							or src address is NULL.\n"); 																							\
-        }                                                                       				\
-        else                                                                    				\
-        {                                                                       				\
-						uint32_t buffer[4];																													\
-						for (int i = 0; i < 4; i++) {														  									\
-							buffer[i] = 0;        																										\
-						}																																						\
-						uintptr_t src_addr = (uintptr_t)(src);																			\
-						buffer[0] = (uint32_t)(src_addr);                                           \
-            int returnCode = am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,    			\
+						uint32_t buffer[4] = {(uint32_t)(uintptr_t)(src), 0, 0, 0};   							\
+            am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,    					\
                                                       (buffer),                  				\
                                                       ((uint32_t *)(&dest)),	  			 	\
                                                       (WORDS));                  				\
-            printf_apollo("MRAM program returnCode = %d\n", returnCode); 								\
         }                                                                       				\
     } while (0)
 		

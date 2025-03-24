@@ -25,9 +25,9 @@ typedef struct
 {
 	//These are for example, change them on what you need
 		AlignedVar idx;
-		AlignedVar input[INPUT_SIZE] ALIGN16;
-		AlignedVar kernel[KERNEL_SIZE] ALIGN16;
-		AlignedVar output[OUTPUT_SIZE] ALIGN16;
+		AlignedVar input[INPUT_SIZE];
+		AlignedVar kernel[KERNEL_SIZE];
+		AlignedVar output[OUTPUT_SIZE];
 } CritVar;
 
 #endif // CRITICAL_VARIABLES_H

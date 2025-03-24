@@ -32,6 +32,7 @@ TASK(1, populate);
 TASK(2, compute_convolution_task);
 
 void populate() {
+	uint32_t start_time = get_time_us();
 	for (size_t i = 0; i < INPUT_SIZE; i++) {
 		MEM_WR(&GVB(input, i), 2*i);
   }
@@ -39,10 +40,16 @@ void populate() {
 	for (size_t i = 0; i < KERNEL_SIZE; i++) {
 		MEM_WR(&GVB(kernel, i), 3*i);
   }
+	
 	TRANSITION_TO(compute_convolution_task);
+	
+	uint32_t end_time = get_time_us();
+  uint32_t duration = end_time - start_time;
+	printf_apollo("\nTask populate performed in %d µs\n", duration);
 }
 
 void compute_convolution_task() {
+	uint32_t start_time = get_time_us();
 	if (GVB(idx) >= OUTPUT_SIZE) {
         printf_apollo("Convolution finished!\n");
         return;
@@ -56,13 +63,16 @@ void compute_convolution_task() {
 
     MEM_WR(&GVB(output, index), sum);
 
-		printf_apollo("Output[%d] = %d\n", index, sum);
+		//printf_apollo("Output[%d] = %d\n", index, sum);
 
     MEM_WR(&GVB(idx), index + 1);
 
     if (index < OUTPUT_SIZE) {
         TRANSITION_TO(compute_convolution_task);
     }
+		uint32_t end_time = get_time_us();
+		uint32_t duration = end_time - start_time;
+		printf_apollo("\nTask Compute_convolution performed in %d µs\n", duration);
 }
 
 ENTRY_TASK(populate);
@@ -76,6 +86,11 @@ INIT_FUNC(init_hw);
 int main(void)
 {
     _init();
+//	uint32_t start_time = get_time_us();
+//		MEM_WR(&x, 4363783);
+//	uint32_t end_time = get_time_us();
+//  uint32_t duration = end_time - start_time;
+//	printf_apollo("\nMEM_WR performed in %d µs\n", duration);
 	
 		while (1)
     {
