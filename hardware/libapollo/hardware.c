@@ -6,8 +6,8 @@ void cache_configuration() {
 }
 
 uint32_t get_time_us(void) {
-	//at 6MHz 6 tick are 1 µs, divide tick per 6	
-  return (am_hal_stimer_counter_get() / 6);
+	//at 6MHz 1 tick is 0.166167 ns, tick_num * time_one_tick in ns
+  return (am_hal_stimer_counter_get() * 166667/ 1000);
 }
 
 void init_hw() {
@@ -44,9 +44,9 @@ void printf_apollo(const char *string, ...) {
 	va_list args;
   va_start(args, string);
     
-  char buffer[256];  // Un buffer temporaneo per la stringa formattata
+  char buffer[256];
   vsnprintf(buffer, sizeof(buffer), string, args);  // Format the string
-  am_util_stdio_printf("%s", buffer);  // Stampa la stringa correttamente
+  am_util_stdio_printf("%s", buffer);
     
   va_end(args);
 }

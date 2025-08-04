@@ -4,7 +4,6 @@
 #include "am_util.h"
 #include "hardware.h"
 
-#define WORDS 4
 #define INIT_SIGNATURE  0xA90110
 #define ALIGN16 __attribute__((aligned(16)))
 #define __nv __align(16) __attribute__((section("_nv")))
@@ -28,7 +27,8 @@ typedef struct
  * @note If `dest` is not 16-byte aligned, an error message is printed, and the 
  *       operation is not executed.
  */
-#define MEM_WR(dest, src)   		                             							\
+#define MEM_WR(dest, src) MEM_WR_WORDS(dest, src, 4)
+#define MEM_WR_WORDS(dest, src, words)   		                             	\
     do                                                                    \
     {                                                                     \
         if (((uintptr_t)(dest) & 0xF) == 0)                             	\
@@ -37,7 +37,7 @@ typedef struct
             am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,  		    		\
                                                     (buffer),             \
                                                     ((uint32_t*)dest),    \
-                                                    (WORDS));             \
+                                                    (words));          	  \
         }                                                                 \
     } while (0)
 		
@@ -83,13 +83,13 @@ typedef struct
 #define COPY_PTR(dest, src)                                 														\
     do                                                                         	 				\
     {                                                                           				\
-        if (((uintptr_t)(dest) & 0xF) == 0 || src != NULL)             							  	\
+        if (((uintptr_t)(dest) & 0xF) == 0 && src != NULL)             							  	\
         {                                                                       				\
 						uint32_t buffer[4] = {(uint32_t)(uintptr_t)(src), 0, 0, 0};   							\
-            am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,    					\
+            am_hal_mram_main_program(AM_HAL_MRAM_PROGRAM_KEY,    												\
                                                       (buffer),                  				\
                                                       ((uint32_t *)(&dest)),	  			 	\
-                                                      (WORDS));                  				\
+                                                      (4));                  						\
         }                                                                       				\
     } while (0)
 		
