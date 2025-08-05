@@ -23,6 +23,7 @@ typedef struct
  *
  * @param dest  Pointer to the destination address where the value will be stored.
  * @param src   The 32-bit value to be written to the destination.
+ * @param words The number of words that will be written. It has to be a multiple of 4
  *
  * @note If `dest` is not 16-byte aligned, an error message is printed, and the 
  *       operation is not executed.
